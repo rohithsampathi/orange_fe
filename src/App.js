@@ -81,7 +81,7 @@ const App = () => {
             endpoint = 'generate_orange_reel';
             break;
           case 'Poll':
-            endpoint = 'generate_orange_poll';
+            endpoint = 'generate_orange_poll'; // This is actually for Facebook Ad
             break;
           case 'Business Strategy':
             endpoint = 'generate_orange_strategy';
@@ -145,7 +145,7 @@ const App = () => {
           endpoint = 'generate_orange_reel';
           break;
         case 'Poll':
-          endpoint = 'generate_orange_poll';
+          endpoint = 'generate_orange_poll'; // This is actually for Facebook Ad
           break;
         case 'Business Strategy':
           endpoint = 'generate_orange_strategy';
@@ -202,7 +202,7 @@ const App = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <DashboardIcon Icon={Instagram} label="Social Post" onClick={() => handleIconClick('Social Post')} />
                 <DashboardIcon Icon={Film} label="Reel Post" onClick={() => handleIconClick('Reel Post')} />
-                <DashboardIcon Icon={BarChart2} label="Poll" onClick={() => handleIconClick('Poll')} />
+                <DashboardIcon Icon={BarChart2} label="Facebook Ad" onClick={() => handleIconClick('Poll')} />
                 <DashboardIcon Icon={Briefcase} label="Business Strategy" onClick={() => handleIconClick('Business Strategy')} />
               </div>
             </motion.div>
