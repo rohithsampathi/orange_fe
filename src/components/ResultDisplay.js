@@ -7,20 +7,20 @@ const ResultDisplay = ({ result, postType, onBack, onRetry }) => (
       <div className="p-4 border-b flex items-center">
         <img src="/luxofy_logo.png" alt="Luxofy" className="w-10 h-10 rounded-full mr-3" />
         <div>
-          <p className="font-bold">luxofy_realty</p>
-          <p className="text-xs">Original audio</p>
+          <p className="font-bold text-black">luxofy_realty</p>
+          <p className="text-xs text-black">Original audio</p>
         </div>
       </div>
       <div className="p-4">
-        <p className="whitespace-pre-wrap text-black">{result}</p>
+        <p className="whitespace-pre-wrap" style={{ color: 'black' }}>{result}</p>
       </div>
       <div className="p-4 flex justify-between items-center">
         <div className="flex space-x-4">
-          <Heart className="text-red-500" />
-          <MessageCircle />
-          <Send className="text-blue-500" />
+          <Heart style={{ color: 'red' }} />
+          <MessageCircle style={{ color: 'black' }} />
+          <Send style={{ color: 'blue' }} />
         </div>
-        <Bookmark />
+        <Bookmark style={{ color: 'black' }} />
       </div>
       <div className="p-4 text-sm text-gray-500">
         <p>Liked by propertyhubgoa and 1 other</p>
