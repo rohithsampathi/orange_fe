@@ -72,7 +72,7 @@ const App = () => {
       };
       
       try {
-        const response = await axios.post('http://localhost:8000/api/generate_orange_reel', requestData, {
+        const response = await axios.post('https://4a40-122-174-149-162.ngrok-free.app/api/generate_orange_reel', requestData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data && response.data.result) {
@@ -106,15 +106,34 @@ const App = () => {
     }
   };
 
-  const handleRetry = () => {
+  const handleRetry = async () => {
     setIsLoading(true);
     setShowResult(false);
-    handleAnswer(answers[questions[questions.length - 1].id]);
+    
+    const requestData = {
+      agenda: answers.agenda,
+      mood: answers.mood,
+      client: answers.client,
+      additional_input: answers.additional_input || ''
+    };
+    
+    try {
+      const response = await axios.post('https://4a40-122-174-149-162.ngrok-free.app/api/generate_orange_reel', requestData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data && response.data.result) {
+        setResult(response.data.result);
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Error generating reel:', error);
+      setResult('Failed to generate reel. Please try again.');
+    } finally {
+      setIsLoading(false);
+      setShowResult(true);
+    }
   };
-
-  if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />;
-  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
