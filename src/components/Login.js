@@ -13,7 +13,7 @@ const Login = ({ onLogin }) => {
 
     try {
       const response = await axios.post(
-        'https://6162-122-174-149-162.ngrok-free.app/token', // Update this line
+        'https://6162-122-174-149-162.ngrok-free.app/token',
         `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
         {
           headers: { 
