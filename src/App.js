@@ -75,7 +75,7 @@ const App = () => {
         let endpoint;
         switch (postType) {
           case 'Social Post':
-            endpoint = 'generate_orange_social_post';
+            endpoint = 'generate_orange_post';
             break;
           case 'Reel Post':
             endpoint = 'generate_orange_reel';
@@ -84,7 +84,7 @@ const App = () => {
             endpoint = 'generate_orange_poll';
             break;
           case 'Business Strategy':
-            endpoint = 'generate_orange_business_strategy';
+            endpoint = 'generate_orange_strategy';
             break;
           default:
             throw new Error('Invalid post type');
