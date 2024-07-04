@@ -72,7 +72,7 @@ const App = () => {
       };
       
       try {
-        const response = await axios.post('https://6162-122-174-149-162.ngrok-free.app/api/generate_orange_reel', requestData, {
+        const response = await axios.post('https://orange-be.onrender.com/api/generate_orange_reel', requestData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data && response.data.result) {
@@ -118,7 +118,7 @@ const App = () => {
     };
     
     try {
-      const response = await axios.post('https://6162-122-174-149-162.ngrok-free.app/api/generate_orange_reel', requestData, {
+      const response = await axios.post('https://orange-be.onrender.com/generate_orange_reel', requestData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data && response.data.result) {
