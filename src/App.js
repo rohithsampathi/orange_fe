@@ -72,7 +72,25 @@ const App = () => {
       };
       
       try {
-        const response = await axios.post('https://orange-be.onrender.com/api/generate_orange_reel', requestData, {
+        let endpoint;
+        switch (postType) {
+          case 'Social Post':
+            endpoint = 'generate_orange_social_post';
+            break;
+          case 'Reel Post':
+            endpoint = 'generate_orange_reel';
+            break;
+          case 'Poll':
+            endpoint = 'generate_orange_poll';
+            break;
+          case 'Business Strategy':
+            endpoint = 'generate_orange_business_strategy';
+            break;
+          default:
+            throw new Error('Invalid post type');
+        }
+        
+        const response = await axios.post(`https://orange-be.onrender.com/api/${endpoint}`, requestData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (response.data && response.data.result) {
@@ -81,8 +99,8 @@ const App = () => {
           throw new Error('Invalid response from server');
         }
       } catch (error) {
-        console.error('Error generating reel:', error);
-        setResult('Failed to generate reel. Please try again.');
+        console.error(`Error generating ${postType}:`, error);
+        setResult(`Failed to generate ${postType}. Please try again.`);
       } finally {
         clearInterval(timer);
         setIsLoading(false);
@@ -118,7 +136,25 @@ const App = () => {
     };
     
     try {
-      const response = await axios.post('https://orange-be.onrender.com/generate_orange_reel', requestData, {
+      let endpoint;
+      switch (postType) {
+        case 'Social Post':
+          endpoint = 'generate_orange_social_post';
+          break;
+        case 'Reel Post':
+          endpoint = 'generate_orange_reel';
+          break;
+        case 'Poll':
+          endpoint = 'generate_orange_poll';
+          break;
+        case 'Business Strategy':
+          endpoint = 'generate_orange_business_strategy';
+          break;
+        default:
+          throw new Error('Invalid post type');
+      }
+      
+      const response = await axios.post(`https://orange-be.onrender.com/api/${endpoint}`, requestData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data && response.data.result) {
@@ -127,8 +163,8 @@ const App = () => {
         throw new Error('Invalid response from server');
       }
     } catch (error) {
-      console.error('Error generating reel:', error);
-      setResult('Failed to generate reel. Please try again.');
+      console.error(`Error generating ${postType}:`, error);
+      setResult(`Failed to generate ${postType}. Please try again.`);
     } finally {
       setIsLoading(false);
       setShowResult(true);
