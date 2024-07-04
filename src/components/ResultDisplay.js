@@ -12,13 +12,13 @@ const ResultDisplay = ({ result, postType, onBack, onRetry }) => (
         </div>
       </div>
       <div className="p-4">
-        <p className="whitespace-pre-wrap">{result}</p>
+        <p className="whitespace-pre-wrap text-black">{result}</p>
       </div>
       <div className="p-4 flex justify-between items-center">
         <div className="flex space-x-4">
-          <Heart />
+          <Heart className="text-red-500" />
           <MessageCircle />
-          <Send />
+          <Send className="text-blue-500" />
         </div>
         <Bookmark />
       </div>
