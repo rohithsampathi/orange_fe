@@ -36,8 +36,8 @@ const PollDisplay = ({ result }) => {
       <div className="p-4 border-b flex items-center">
         <img src="/luxofy_logo.png" alt="Luxofy" className="w-10 h-10 rounded-full mr-3" />
         <div>
-          <p className="font-bold text-black">luxofy_realty</p>
-          <p className="text-xs text-black">Poll</p>
+          <p className="font-bold text-black">1acre.in</p>
+          <p className="text-xs text-black">AD Post</p>
         </div>
       </div>
       <div className="p-4">
