@@ -21,7 +21,7 @@ const defaultQuestions = [
 const emailQuestions = [
   { id: 'receiver', text: "Who is the receiver and their designation?", type: "textarea" },
   { id: 'client_company', text: "Tell me more about the client company", type: "textarea" },
-  { id: 'our_company', text: "What company are we representing?", type: "text" },
+  { id: 'client', text: "What company are we representing?", type: "dropdown", options: ["Luxofy", "1acre", "Montaigne"] },
   { id: 'target_industry', text: "What Industry does our Target Operate in?", type: "text" },
   { id: 'additional_input', text: "Any additional inputs or offers?", type: "textarea" }
 ];
@@ -109,7 +109,7 @@ const App = () => {
           requestData = {
             receiver: newAnswers.receiver,
             client_company: newAnswers.client_company,
-            our_company: newAnswers.our_company,
+            client: newAnswers.client,
             target_industry: newAnswers.target_industry,
             additional_input: newAnswers.additional_input || ''
           };
@@ -160,7 +160,7 @@ const App = () => {
         requestData = {
           receiver: answers.receiver,
           client_company: answers.client_company,
-          our_company: answers.our_company,
+          client: answers.client,
           target_industry: answers.target_industry,
           additional_input: answers.additional_input || ''
         };
