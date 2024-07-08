@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, MessageCircle, Send, Bookmark } from 'lucide-react';
+import { Heart, MessageCircle, Send, Bookmark, Mail } from 'lucide-react';
 
 const SocialPostDisplay = ({ result }) => (
   <div className="bg-white shadow-xl rounded-lg max-w-md w-full">
@@ -53,11 +53,28 @@ const FacebookAdDisplay = ({ result }) => (
   </div>
 );
 
+const EmailDisplay = ({ result }) => (
+  <div className="bg-white shadow-xl rounded-lg max-w-md w-full">
+    <div className="p-4 border-b flex items-center">
+      <Mail className="w-6 h-6 mr-3 text-orange-500" />
+      <div>
+        <p className="font-bold text-black">CEO Email</p>
+        <p className="text-xs text-black">Generated Email Content</p>
+      </div>
+    </div>
+    <div className="p-4">
+      <pre className="whitespace-pre-wrap" style={{ color: 'black', fontFamily: 'inherit' }}>{result}</pre>
+    </div>
+  </div>
+);
+
 const ResultDisplay = ({ result, postType, onBack, onRetry }) => (
   <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
     <div className="w-full max-w-md">
       {postType === 'Poll' ? (
         <FacebookAdDisplay result={result} />
+      ) : postType === 'CEO Email' ? (
+        <EmailDisplay result={result} />
       ) : (
         <SocialPostDisplay result={result} />
       )}
@@ -68,5 +85,6 @@ const ResultDisplay = ({ result, postType, onBack, onRetry }) => (
     </div>
   </div>
 );
+
 
 export default ResultDisplay;

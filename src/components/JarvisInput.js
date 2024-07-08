@@ -31,7 +31,7 @@ const JarvisInput = ({ question, onAnswer, onBack }) => {
         {displayedText}
       </h2>
       <form onSubmit={handleSubmit} className="w-full max-w-md">
-        {question.type === 'dropdown' ? (
+        {question.type === 'dropdown' && (
           <select
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -42,7 +42,18 @@ const JarvisInput = ({ question, onAnswer, onBack }) => {
               <option key={option} value={option}>{option}</option>
             ))}
           </select>
-        ) : (
+        )}
+        {question.type === 'textarea' && (
+          <textarea
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            className="w-full p-3 mb-4 bg-transparent border-2 border-orange-500 text-white focus:outline-none focus:border-orange-600 rounded-md"
+            placeholder="Type your answer here"
+            rows={5}
+            autoFocus
+          />
+        )}
+        {question.type === 'text' && (
           <input
             type="text"
             value={inputValue}
