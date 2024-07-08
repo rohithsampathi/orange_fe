@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Instagram, Film, BarChart2, Briefcase, Mail } from 'lucide-react';
@@ -153,6 +153,12 @@ const App = () => {
   const handleRetry = useCallback(async () => {
     setIsLoading(true);
     setShowResult(false);
+    setElapsedTime(0);  // Reset elapsed time
+  
+    const startTime = Date.now();
+    timerRef.current = setInterval(() => {
+      setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
 
     try {
       let requestData;
@@ -179,6 +185,7 @@ const App = () => {
       console.error(`Error generating ${postType}:`, error);
       setResult(`Failed to generate ${postType}. Please try again.`);
     } finally {
+      clearInterval(timerRef.current);
       setIsLoading(false);
       setShowResult(true);
     }
