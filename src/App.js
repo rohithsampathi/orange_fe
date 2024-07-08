@@ -47,6 +47,7 @@ const App = () => {
   const [postType, setPostType] = useState('');
   const [elapsedTime, setElapsedTime] = useState(0);
   const [questions, setQuestions] = useState(defaultQuestions);
+  const timerRef = useRef(null);
 
   const handleLogin = useCallback((user, accessToken) => {
     setIsLoggedIn(true);
@@ -99,9 +100,10 @@ const App = () => {
       setIsLoading(true);
       setElapsedTime(0);
       const startTime = Date.now();
-      const timer = setInterval(() => {
+      timerRef.current = setInterval(() => {
         setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
       }, 1000);
+
 
       try {
         let requestData;
@@ -128,7 +130,7 @@ const App = () => {
         console.error(`Error generating ${postType}:`, error);
         setResult(`Failed to generate ${postType}. Please try again.`);
       } finally {
-        clearInterval(timer);
+        clearInterval(timerRef.current);
         setIsLoading(false);
         setShowResult(true);
       }
@@ -153,8 +155,8 @@ const App = () => {
   const handleRetry = useCallback(async () => {
     setIsLoading(true);
     setShowResult(false);
-    setElapsedTime(0);  // Reset elapsed time
-  
+    setElapsedTime(0);
+
     const startTime = Date.now();
     timerRef.current = setInterval(() => {
       setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
