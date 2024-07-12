@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Instagram, Film, BarChart2, Briefcase, Mail, MessageSquare } from 'lucide-react';
+import { Instagram, Film, BarChart2, Briefcase, Mail, MessageSquare, Video } from 'lucide-react';
 import Login from './components/Login';
 import DashboardIcon from './components/DashboardIcon';
 import JarvisInput from './components/JarvisInput';
@@ -30,6 +30,11 @@ const questionSets = {
     { id: 'industry', text: "What industry are you working on?", type: "text" },
     { id: 'purpose', text: "What is the purpose of this strategy discussion?", type: "text" },
     { id: 'client', text: "Who is the client?", type: "dropdown", options: ["Luxofy", "1acre", "Montaigne"] }
+  ],
+  script: [
+    { id: 'industry', text: "What industry is our target audience?", type: "text" },
+    { id: 'purpose', text: "What is the purpose of this video?", type: "text" },
+    { id: 'client', text: "Who are we representing?", type: "dropdown", options: ["Luxofy", "1acre", "Montaigne"] }
   ]
 };
 
@@ -39,7 +44,8 @@ const postTypeToEndpoint = {
   'Poll': 'generate_orange_poll',
   'Business Strategy': 'generate_orange_strategy',
   'CEO Email': 'generate_orange_email',
-  'Strategy Chat': 'generate_orange_strategy_chat'
+  'Strategy Chat': 'generate_orange_strategy_chat',
+  'Script Generator': 'generate_orange_script'
 };
 
 const App = () => {
@@ -81,6 +87,7 @@ const App = () => {
   const handleIconClick = useCallback((type) => {
     const questions = type === 'CEO Email' ? questionSets.email :
                       type === 'Strategy Chat' ? questionSets.strategy :
+                      type === 'Script Generator' ? questionSets.script :
                       questionSets.default;
     updateState({
       postType: type,
@@ -95,12 +102,32 @@ const App = () => {
     const endpoint = postTypeToEndpoint[state.postType];
     if (!endpoint) throw new Error('Invalid post type');
 
-    const response = await axios.post(`${API_BASE_URL}/${endpoint}`, requestData, {
-      headers: { Authorization: `Bearer ${state.token}` }
-    });
+    try {
+      console.log(`Sending request to ${API_BASE_URL}/${endpoint}`, JSON.stringify(requestData, null, 2));
+      const response = await axios.post(`${API_BASE_URL}/${endpoint}`, requestData, {
+        headers: { 
+          Authorization: `Bearer ${state.token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-    if (response.data && response.data.result) return response.data.result;
-    throw new Error('Invalid response from server');
+      console.log('Response:', JSON.stringify(response.data, null, 2));
+
+      if (response.data && response.data.result) return response.data.result;
+      throw new Error('Invalid response from server');
+    } catch (error) {
+      console.error(`Error generating ${state.postType}:`, error);
+      if (error.response) {
+        console.error('Response data:', JSON.stringify(error.response.data, null, 2));
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', JSON.stringify(error.response.headers, null, 2));
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
+      throw new Error(`Failed to generate ${state.postType}. ${error.response ? error.response.data.detail || error.response.statusText : error.message}`);
+    }
   }, [state.postType, state.token]);
 
   const handleAnswer = useCallback(async (answer) => {
@@ -118,25 +145,36 @@ const App = () => {
       }, 1000);
 
       try {
-        const requestData = state.postType === 'CEO Email'
-          ? {
-              receiver: newAnswers.receiver,
-              client_company: newAnswers.client_company,
-              client: newAnswers.client,
-              target_industry: newAnswers.target_industry,
-              additional_input: newAnswers.additional_input || ''
-            }
-          : {
-              agenda: newAnswers.agenda,
-              mood: newAnswers.mood,
-              client: newAnswers.client,
-              additional_input: newAnswers.additional_input || ''
-            };
+        let requestData;
+        if (state.postType === 'CEO Email') {
+          requestData = {
+            receiver: newAnswers.receiver,
+            client_company: newAnswers.client_company,
+            client: newAnswers.client,
+            target_industry: newAnswers.target_industry,
+            additional_input: newAnswers.additional_input || ''
+          };
+        } else if (state.postType === 'Script Generator') {
+          requestData = {
+            industry: newAnswers.industry,
+            purpose: newAnswers.purpose,
+            client: newAnswers.client
+          };
+        } else {
+          requestData = {
+            agenda: newAnswers.agenda,
+            mood: newAnswers.mood,
+            client: newAnswers.client,
+            additional_input: newAnswers.additional_input || ''
+          };
+        }
+
+        console.log('Sending request data:', JSON.stringify(requestData, null, 2));
 
         const result = await generateContent(requestData);
         updateState({ result, showResult: true });
       } catch (error) {
-        console.error(`Error generating ${state.postType}:`, error);
+        console.error('Error in handleAnswer:', error);
         updateState({ result: `Failed to generate ${state.postType}. Please try again.` });
       } finally {
         clearInterval(timer);
@@ -176,7 +214,6 @@ const App = () => {
       const result = await generateContent(state.answers);
       updateState({ result });
     } catch (error) {
-      console.error(`Error generating ${state.postType}:`, error);
       updateState({ result: `Failed to generate ${state.postType}. Please try again.` });
     } finally {
       clearInterval(timer);
@@ -190,7 +227,8 @@ const App = () => {
     { Icon: BarChart2, label: "Facebook Ad", type: "Poll" },
     { Icon: Briefcase, label: "Business Strategy", type: "Business Strategy" },
     { Icon: Mail, label: "CEO Email", type: "CEO Email" },
-    { Icon: MessageSquare, label: "Discuss Strategy", type: "Strategy Chat" }
+    { Icon: MessageSquare, label: "Discuss Strategy", type: "Strategy Chat" },
+    { Icon: Video, label: "Script Generator", type: "Script Generator" }
   ], []);
 
   if (!state.isLoggedIn) return <Login onLogin={handleLogin} />;
