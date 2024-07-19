@@ -180,7 +180,7 @@ const App = () => {
         } else {
           result = response;
         }
-        updateState({ result, showResult: true });
+        updateState({ result, showResult: true, answers: newAnswers });
       } catch (error) {
         console.error('Error in handleAnswer:', error);
         updateState({ result: `Failed to generate ${state.postType}. Please try again.` });
@@ -191,6 +191,7 @@ const App = () => {
     }
   }, [state, generateContent]);
 
+  
   const handleBack = useCallback(() => {
     if (state.showResult || state.showChat) {
       updateState({
@@ -219,7 +220,33 @@ const App = () => {
     }, 1000);
   
     try {
-      const response = await generateContent(state.answers);
+      let requestData;
+      if (state.postType === 'CEO Email') {
+        requestData = {
+          receiver: state.answers.receiver,
+          client_company: state.answers.client_company,
+          client: state.answers.client,
+          target_industry: state.answers.target_industry,
+          additional_input: state.answers.additional_input || ''
+        };
+      } else if (state.postType === 'Script Generator') {
+        requestData = {
+          industry: state.answers.industry,
+          purpose: state.answers.purpose,
+          client: state.answers.client  // Ensure this field is included
+        };
+      } else {
+        requestData = {
+          agenda: state.answers.agenda,
+          mood: state.answers.mood,
+          client: state.answers.client,
+          additional_input: state.answers.additional_input || ''
+        };
+      }
+  
+      console.log('Retry: Sending request data:', JSON.stringify(requestData, null, 2));
+  
+      const response = await generateContent(requestData);
       let result;
       if (state.postType === 'Script Generator' && Array.isArray(response)) {
         result = response[0].text;
