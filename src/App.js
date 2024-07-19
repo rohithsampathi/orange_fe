@@ -114,9 +114,6 @@ const App = () => {
       console.log('Response:', JSON.stringify(response.data, null, 2));
   
       if (response.data && response.data.result) {
-        if (state.postType === 'Script Generator' && Array.isArray(response.data.result)) {
-          return response.data.result[0].text;
-        }
         return response.data.result;
       }
       throw new Error('Invalid response from server');
@@ -178,8 +175,8 @@ const App = () => {
   
         const response = await generateContent(requestData);
         let result;
-        if (state.postType === 'Script Generator' && Array.isArray(response.result)) {
-          result = response.result[0].text;
+        if (state.postType === 'Script Generator' && Array.isArray(response)) {
+          result = response[0].text;
         } else {
           result = response;
         }
@@ -220,11 +217,18 @@ const App = () => {
     const timer = setInterval(() => {
       updateState({ elapsedTime: Math.floor((Date.now() - startTime) / 1000) });
     }, 1000);
-
+  
     try {
-      const result = await generateContent(state.answers);
+      const response = await generateContent(state.answers);
+      let result;
+      if (state.postType === 'Script Generator' && Array.isArray(response)) {
+        result = response[0].text;
+      } else {
+        result = response;
+      }
       updateState({ result });
     } catch (error) {
+      console.error('Error in handleRetry:', error);
       updateState({ result: `Failed to generate ${state.postType}. Please try again.` });
     } finally {
       clearInterval(timer);
