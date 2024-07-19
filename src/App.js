@@ -101,7 +101,7 @@ const App = () => {
   const generateContent = useCallback(async (requestData) => {
     const endpoint = postTypeToEndpoint[state.postType];
     if (!endpoint) throw new Error('Invalid post type');
-
+  
     try {
       console.log(`Sending request to ${API_BASE_URL}/${endpoint}`, JSON.stringify(requestData, null, 2));
       const response = await axios.post(`${API_BASE_URL}/${endpoint}`, requestData, {
@@ -110,10 +110,15 @@ const App = () => {
           'Content-Type': 'application/json'
         }
       });
-
+  
       console.log('Response:', JSON.stringify(response.data, null, 2));
-
-      if (response.data && response.data.result) return response.data.result;
+  
+      if (response.data && response.data.result) {
+        if (state.postType === 'Script Generator' && Array.isArray(response.data.result)) {
+          return response.data.result[0].text;
+        }
+        return response.data.result;
+      }
       throw new Error('Invalid response from server');
     } catch (error) {
       console.error(`Error generating ${state.postType}:`, error);
@@ -143,7 +148,7 @@ const App = () => {
       const timer = setInterval(() => {
         updateState({ elapsedTime: Math.floor((Date.now() - startTime) / 1000) });
       }, 1000);
-
+  
       try {
         let requestData;
         if (state.postType === 'CEO Email') {
@@ -168,10 +173,16 @@ const App = () => {
             additional_input: newAnswers.additional_input || ''
           };
         }
-
+  
         console.log('Sending request data:', JSON.stringify(requestData, null, 2));
-
-        const result = await generateContent(requestData);
+  
+        const response = await generateContent(requestData);
+        let result;
+        if (state.postType === 'Script Generator' && Array.isArray(response.result)) {
+          result = response.result[0].text;
+        } else {
+          result = response;
+        }
         updateState({ result, showResult: true });
       } catch (error) {
         console.error('Error in handleAnswer:', error);
