@@ -1,3 +1,5 @@
+// src/components/mockContent.js
+
 export const mockContent = {
     'Social Post': `Join Us at Casa de Fresco, Guirim, North Goa! 🌴🏡
   Attention realtors!

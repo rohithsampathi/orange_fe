@@ -1,6 +1,9 @@
+// src/components/Login.js
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import OrangeLogo from './OrangeLogo';
+import { API_BASE_URL } from '../App';
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -12,17 +15,23 @@ const Login = ({ onLogin }) => {
     setError('');
 
     try {
-      const response = await axios.post(
-        'https://orange-be.onrender.com/token',
-        `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
-        {
-          headers: { 
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }
-      );
+      // Constructing the correct API URL
+      const url = `${API_BASE_URL.replace('/api', '')}/token`;
 
-      console.log('Login response:', response.data);
+      // Encoding the payload explicitly
+      const payload = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+
+      console.log('Request URL:', url);
+      console.log('Request Payload:', payload);
+
+      // Sending the POST request
+      const response = await axios.post(url, payload, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      console.log('Response:', response.data);
 
       if (response.data && response.data.access_token) {
         onLogin(username, response.data.access_token);
@@ -31,7 +40,7 @@ const Login = ({ onLogin }) => {
       }
     } catch (error) {
       console.error('Login error:', error.response ? error.response.data : error.message);
-      
+
       if (error.response) {
         if (error.response.status === 400) {
           setError('Invalid username or password. Please try again.');
@@ -52,8 +61,8 @@ const Login = ({ onLogin }) => {
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-96">
         <div className="text-center mb-8">
-          <OrangeLogo size="large" />
-          <h2 className="text-3xl font-bold text-white mt-4">Orange Zone</h2>
+          <OrangeLogo />
+          <h2 className="text-3xl font-bold text-teal-200 mt-4">Orange Zone</h2>
         </div>
         {error && (
           <div className="bg-red-500 text-white p-3 rounded mb-4">
@@ -66,18 +75,18 @@ const Login = ({ onLogin }) => {
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full p-3 mb-4 bg-gray-700 rounded text-white"
+            className="w-full p-3 mb-4 bg-transparent border-b-2 border-teal-500 text-teal-200 focus:outline-none focus:border-teal-400"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-3 mb-6 bg-gray-700 rounded text-white"
+            className="w-full p-3 mb-6 bg-transparent border-b-2 border-teal-500 text-teal-200 focus:outline-none focus:border-teal-400"
           />
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white p-3 rounded font-bold hover:bg-orange-600 transition-colors"
+            className="w-full bg-teal-500 text-white p-3 rounded-md hover:bg-teal-400 transition-colors font-bold"
           >
             Log In
           </button>
