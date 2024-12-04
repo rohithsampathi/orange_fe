@@ -8,8 +8,8 @@ const SocialPostDisplay = ({ result }) => (
     <div className="p-4 border-b border-gray-700 flex items-center">
       <img src="/luxofy_logo.png" alt="Luxofy" className="w-10 h-10 rounded-full mr-3" />
       <div>
-        <p className="font-bold">luxofy_realty</p>
-        <p className="text-xs">Original audio</p>
+        <p className="font-bold">Montaigne Labs</p>
+        <p className="text-xs">1M Followers</p>
       </div>
     </div>
     <div className="p-4">

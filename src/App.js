@@ -33,7 +33,7 @@ const questionSets = {
       id: 'client',
       text: 'Who is the client?',
       type: 'dropdown',
-      options: ['Luxofy', '1acre', 'Montaigne'],
+      options: ['Luxofy', '1acre', 'Montaigne', 'MyBentos'],
     },
     {
       id: 'additional_input',
@@ -85,7 +85,7 @@ const questionSets = {
       id: 'client',
       text: 'Who is the client?',
       type: 'dropdown',
-      options: ['Luxofy', '1acre', 'Montaigne'],
+      options: ['Luxofy', '1acre', 'Montaigne', 'MyBentos'],
     },
   ],
   script: [
@@ -103,7 +103,7 @@ const questionSets = {
       id: 'client',
       text: 'Who are we representing?',
       type: 'dropdown',
-      options: ['Luxofy', '1acre', 'Montaigne'],
+      options: ['Luxofy', '1acre', 'Montaigne', 'MyBentos'],
     },
   ],
 };
